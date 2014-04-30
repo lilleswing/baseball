@@ -1,22 +1,25 @@
-from model.event import Event
+from model import session
 from model.batter import Batter
+from model.event import Event
+from model.parsedfile import ParsedFile
 from model.pitcher import Pitcher
 from model.team import Team
-from model import session
 from os import listdir
 from os.path import isfile, join
-import xml.etree.ElementTree as ET
-import traceback
 import re
+import traceback
+import xml.etree.ElementTree as ET
 
 __author__ = 'leswing'
 
 raw_xml_folder = 'rawxml'
 pitchers_set = set()
 batters_set = set()
+file_set = set()
 
 HOME_TEAM = "home"
 AWAY_TEAM = "away"
+
 
 def get_team(team_type, attrib):
     try:
@@ -82,21 +85,24 @@ def save_pitchers(root):
 
 def parse_box_scores():
     files = [f for f in listdir(raw_xml_folder) if isfile(join(raw_xml_folder, f))]
-    boxscores = [f for f in files if re.match(".*boxscore.xml", f)]
+    boxscores = [f for f in files if re.match(".*boxscore.xml", f) and f not in file_set]
     boxscores = sorted(boxscores)
     for boxscore in boxscores:
         try:
             xml_data = open('%s/%s' % (raw_xml_folder, boxscore)).read()
             root = ET.fromstring(xml_data)
-            #save_team_names(root)
+            save_team_names(root)
             save_batters(root)
-            #save_pitchers(root)
+            save_pitchers(root)
+            indexed = ParsedFile(boxscore)
+            session.add(indexed)
+            session.commit()
         except:
             print("error with boxscore %s" % boxscore)
             traceback.print_exc()
             continue
     session.add_all(list(batters_set))
-    #session.add_all(list(pitchers_set))
+    session.add_all(list(pitchers_set))
     session.commit()
 
 
@@ -114,7 +120,6 @@ def save_half_inning(inning):
     return events
 
 
-
 def save_events(root):
     innings = root.findall('inning')
     events = list()
@@ -127,13 +132,16 @@ def save_events(root):
 
 def parse_game_events():
     files = [f for f in listdir(raw_xml_folder) if isfile(join(raw_xml_folder, f))]
-    events = [f for f in files if re.match(".*events.xml", f)]
+    events = [f for f in files if re.match(".*events.xml", f) and f not in file_set]
     events = sorted(events)
     for event in events:
         try:
             xml_data = open('%s/%s' % (raw_xml_folder, event)).read()
             root = ET.fromstring(xml_data)
             save_events(root)
+            indexed = ParsedFile(event)
+            session.add(indexed)
+            session.commit()
         except:
             print("error with event %s" % event)
             traceback.print_exc()
@@ -141,5 +149,8 @@ def parse_game_events():
 
 
 if __name__ == '__main__':
+    global file_set
+    parsed = session.query(ParsedFile).all()
+    file_set = set([x.filename for x in parsed])
     parse_box_scores()
     parse_game_events()

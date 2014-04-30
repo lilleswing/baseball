@@ -4,11 +4,12 @@ from model import Base
 
 __author__ = 'leswing'
 
+
 class Batter(Base):
     __tablename__ = 'batter'
 
     id = Column(Integer, primary_key=True)
-    mlb_id =  Column(Integer)
+    mlb_id = Column(Integer)
     name = Column(String(128))
 
     def __hash__(self):

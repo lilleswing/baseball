@@ -5,7 +5,7 @@ __author__ = 'leswing'
 
 
 Base = declarative_base()
-engine = create_engine('postgresql://postgres:NaClH2O@localhost/baseball', echo=True)
+engine = create_engine('postgresql://postgres:NaClH2O@localhost:3247/baseball', echo=True)
 Session = sessionmaker()
 Session.configure(bind=engine)
 session = Session()
@@ -16,5 +16,6 @@ def init():
     from model.batter import Batter
     from model.pitcher import Pitcher
     from model.team import Team
+    from model.parsedfile import ParsedFile
     Base.metadata.create_all(engine)
 

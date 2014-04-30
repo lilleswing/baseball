@@ -5,7 +5,6 @@ from model import Base
 __author__ = 'leswing'
 
 
-
 class Event(Base):
     __tablename__ = 'event'
 
@@ -17,7 +16,7 @@ class Event(Base):
 
     def to_json(self):
         d = {
-            "id":self.id,
+            "id": self.id,
             "batter": self.batter,
             "pitcher": self.pitcher,
             "event": self.event,

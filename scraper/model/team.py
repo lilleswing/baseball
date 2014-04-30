@@ -4,6 +4,7 @@ from sqlalchemy import Column, Integer, String
 
 __author__ = 'leswing'
 
+
 class Team(Base):
     __tablename__ = 'team'
 

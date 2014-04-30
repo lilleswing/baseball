@@ -1,6 +1,7 @@
 *.idea/
 *.iml
 *.iws
+*.pyc
 
 log/
 target/

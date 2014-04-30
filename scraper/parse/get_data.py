@@ -1,7 +1,13 @@
-__author__ = 'leswing'
-import requests
+from datetime import timedelta, datetime
+from model import session
+from model.parsedfile import ParsedFile
+from sqlalchemy import desc
 import re
+import requests
 import traceback
+
+__author__ = 'leswing'
+
 
 base_url = "http://gd2.mlb.com/components/game/mlb"
 rawxml_folder = 'rawxml'
@@ -25,7 +31,7 @@ def save_to_file(url, extension, year, month, day, game_num):
     try:
         full_url = "%s/%s" % (url, extension)
         r = requests.get(full_url)
-        filename = "%s/%04d.%02d.%02d.game_%d.%s" %(rawxml_folder, year, month, day, game_num, extension)
+        filename = "%s/%04d.%02d.%02d.game_%d.%s" % (rawxml_folder, year, month, day, game_num, extension)
         f = open(filename, 'w')
         f.write(r.text.encode('utf-8'))
         f.close()
@@ -43,13 +49,23 @@ def get_links(url, year, month, day, text):
     return links
 
 
-if __name__=='__main__':
-    years = ['2008','2009','2010','2011','2012','2013']
-    for year in xrange(2008,2014):
-        for month in xrange(1,13):
-            for day in xrange(1,32):
-                download_xml(year, month, day)
+def download_dates(start):
+    now = datetime.datetime.now()
+    day = timedelta(days=1)
+    while start < now:
+        download_xml(start.year, start.month, start.day)
+        start += day
 
 
+def full_download():
+    first = datetime.datetime(year=2008, month=1, day=1)
+    download_dates(first)
 
+
+def incremental_download():
+    last = session.query(ParsedFile).order_by(desc(ParsedFile.timestamp)).first()
+    download_dates(last)
+
+if __name__ == '__main__':
+    incremental_download()
 

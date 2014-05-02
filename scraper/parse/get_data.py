@@ -1,6 +1,6 @@
 from datetime import timedelta, datetime
 from model import session
-from model.parsedfile import ParsedFile
+from model.game import Game
 from sqlalchemy import desc
 import re
 import requests
@@ -63,7 +63,7 @@ def full_download():
 
 
 def incremental_download():
-    last = session.query(ParsedFile).order_by(desc(ParsedFile.timestamp)).first()
+    last = session.query(Game).order_by(desc(Game.timestamp)).first()
     download_dates(last)
 
 if __name__ == '__main__':

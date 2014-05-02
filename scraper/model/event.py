@@ -13,6 +13,7 @@ class Event(Base):
     pitcher = Column(Integer)
     event = Column(String(128))
     description = Column(String(1024))
+    game_id = Column(Integer)
 
     def to_json(self):
         d = {
@@ -20,6 +21,7 @@ class Event(Base):
             "batter": self.batter,
             "pitcher": self.pitcher,
             "event": self.event,
-            "description": self.description
+            "description": self.description,
+            "game_id": self.game_id
         }
         return json.dumps(d)

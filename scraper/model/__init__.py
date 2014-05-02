@@ -16,6 +16,6 @@ def init():
     from model.batter import Batter
     from model.pitcher import Pitcher
     from model.team import Team
-    from model.parsedfile import ParsedFile
+    from model.game import Game
+    Base.metadata.drop_all(engine)
     Base.metadata.create_all(engine)
-

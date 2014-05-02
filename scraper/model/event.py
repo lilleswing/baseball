@@ -13,6 +13,7 @@ class Event(Base):
     pitcher = Column(Integer)
     event = Column(String(128))
     description = Column(String(1024))
+    at_bat = Column(Integer)
     game_id = Column(Integer)
 
     def to_json(self):

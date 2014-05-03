@@ -1,6 +1,9 @@
 import json
-from model import Base
+
 from sqlalchemy import Column, Integer, String
+
+from model import Base
+
 
 __author__ = 'leswing'
 

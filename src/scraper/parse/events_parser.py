@@ -1,6 +1,8 @@
-from model.dbcollection import DbCollection
 import xml.etree.ElementTree as ET
+
+from model.dbcollection import DbCollection
 from model.event import Event
+
 
 __author__ = 'karl'
 

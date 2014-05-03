@@ -1,10 +1,13 @@
 from datetime import timedelta, datetime
+import re
+import traceback
+
+from sqlalchemy import desc
+
 from model import session
 from model.game import Game
-from sqlalchemy import desc
-import re
 import requests
-import traceback
+
 
 __author__ = 'leswing'
 

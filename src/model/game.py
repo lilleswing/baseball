@@ -1,7 +1,10 @@
-__author__ = 'leswing'
+import datetime
 import json
-from sqlalchemy import Column, Integer
 from model import Base
+from sqlalchemy import Column, Integer, TIMESTAMP
+
+__author__ = 'leswing'
+
 
 __author__ = 'leswing'
 
@@ -14,12 +17,14 @@ class Game(Base):
     month = Column(Integer)
     day = Column(Integer)
     game_num = Column(Integer)
+    timestamp = Column(TIMESTAMP)
 
     def __init__(self, year, month, day, game_num):
         self.year = year
         self.month = month
         self.day = day
         self.game_num = game_num
+        self.timestamp = datetime.datetime(year=year, month=month, day=day)
 
     def __hash__(self):
         return hash((self.year, self.month, self.day, self.game_num))

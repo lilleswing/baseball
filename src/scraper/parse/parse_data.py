@@ -11,7 +11,7 @@ __author__ = 'leswing'
 
 BOX_SCORE = "box_score"
 EVENTS = "events"
-RAW_XML_FOLDER = 'rawxml'
+RAW_XML_FOLDER = 'scraper/rawxml'
 
 global game_set
 start_date = datetime.datetime(year=2008, month=1, day=1)

@@ -1,12 +1,12 @@
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
+import settings
 __author__ = 'leswing'
 
 
 Base = declarative_base()
-engine = create_engine('postgresql://postgres:NaClH2O@localhost:3247/baseball', echo=True)
-#engine = create_engine('sqlite:///foo.db', echo=False)
+engine = create_engine(settings.database_url, settings.database_echo)
 Session = sessionmaker()
 Session.configure(bind=engine)
 session = Session()

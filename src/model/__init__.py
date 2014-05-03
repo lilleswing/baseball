@@ -6,7 +6,7 @@ __author__ = 'leswing'
 
 
 Base = declarative_base()
-engine = create_engine(settings.database_url, settings.database_echo)
+engine = create_engine(settings.database_url, echo=settings.database_echo)
 Session = sessionmaker()
 Session.configure(bind=engine)
 session = Session()

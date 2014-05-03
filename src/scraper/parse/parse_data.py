@@ -4,8 +4,8 @@ import os
 from model import session
 from model.dbcollection import DbCollection
 from model.game import Game
-from parse.boxscore_parser import BoxscoreParser
-from parse.events_parser import EventsParser
+from scraper.parse.boxscore_parser import BoxscoreParser
+from scraper.parse.events_parser import EventsParser
 
 __author__ = 'leswing'
 

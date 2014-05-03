@@ -13,7 +13,7 @@ __author__ = 'leswing'
 
 
 base_url = "http://gd2.mlb.com/components/game/mlb"
-rawxml_folder = 'rawxml'
+rawxml_folder = 'scraper/rawxml'
 
 
 def create_url(year, month, day):

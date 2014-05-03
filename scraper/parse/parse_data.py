@@ -1,158 +1,88 @@
+from xml.etree.ElementTree import ParseError
 import datetime
 import os
 from model import session
-from model.batter import Batter
-from model.event import Event
+from model.dbcollection import DbCollection
 from model.game import Game
-from model.pitcher import Pitcher
-from model.team import Team
-from os import listdir
-from os.path import isfile, join
-import re
-import traceback
-import xml.etree.ElementTree as ET
+from boxscore_parser import BoxscoreParser
+from events_parser import EventsParser
 
 __author__ = 'leswing'
 
-raw_xml_folder = 'rawxml'
-pitchers_set = set()
-batters_set = set()
-file_set = set()
+BOX_SCORE = "box_score"
+EVENTS = "events"
+RAW_XML_FOLDER = 'rawxml'
 
-HOME_TEAM = "home"
-AWAY_TEAM = "away"
+global game_set
+start_date = datetime.datetime(year=2008, month=1, day=1)
 
 
-def get_team(team_type, attrib):
+def get_files(game):
+    base = "%s/%4d.%02d.%02d.game_%d" % (RAW_XML_FOLDER, game.year, game.month, game.day, game.game_num)
+    boxscore = "%s%s" % (base, ".boxscore.xml")
+    events = "%s%s" % (base, ".game_events.xml")
+    return {
+        BOX_SCORE: boxscore,
+        EVENTS: events
+    }
+
+
+def has_game(game):
+    files = get_files(game)
+    for f in files.values():
+        if not os.path.isfile(f):
+            return False
+    return True
+
+
+def get_event_data(game):
+    files = get_files(game)
+    return open(files[EVENTS]).read()
+
+
+def get_boxscore_data(game):
+    files = get_files(game)
+    return open(files[BOX_SCORE]).read()
+
+
+def parse_boxscore(game, collection):
     try:
-        team = Team()
-        team.code = attrib['%s_team_code' % team_type]
-        team.name = attrib['%s_fname' % team_type]
-        team.mlb_id = int(attrib['%s_id' % team_type])
-        return team
-    except:
-        return None
+        box_parser = BoxscoreParser(game.id)
+        box_collection = box_parser.parse(get_boxscore_data(game))
+        collection.join(box_collection)
+    except ParseError:
+        print "Unable to parse boxscore for %s" % (game.to_json())
 
 
-def save_team_names(root):
-    home_team = get_team(HOME_TEAM, root.attrib)
-    if home_team is not None:
-        team = session.query(Team).filter(Team.mlb_id == home_team.mlb_id).all()
-        if len(team) < 1:
-            session.add(home_team)
-    away_team = get_team(AWAY_TEAM, root.attrib)
-    if away_team is not None:
-        team = session.query(Team).filter(Team.mlb_id == away_team.mlb_id).all()
-        if len(team) < 1:
-            session.add(away_team)
-
-    session.commit()
-
-
-def save_batters(root):
-    batting_sections = root.findall('batting')
-    for batting_section in batting_sections:
-        batters = batting_section.findall('batter')
-        for batter_xml in batters:
-            try:
-                attrib = batter_xml.attrib
-                batter = Batter()
-                if 'name_display_first_last' in attrib:
-                    batter.name = attrib['name_display_first_last']
-                elif 'name' in attrib:
-                    batter.name = attrib['name']
-                batter.mlb_id = int(attrib['id'])
-                batters_set.add(batter)
-            except:
-                print("error saving batter")
-
-
-def save_pitchers(root):
-    pitching_sections = root.findall('pitching')
-    for pitching_section in pitching_sections:
-        pitchers = pitching_section.findall('pitcher')
-        for pitcher_xml in pitchers:
-            try:
-                attrib = pitcher_xml.attrib
-                pitcher = Pitcher()
-                if 'name_display_first_last' in attrib:
-                    pitcher.name = attrib['name_display_first_last']
-                elif 'name' in attrib:
-                    pitcher.name = attrib['name']
-                pitcher.mlb_id = int(attrib['id'])
-                pitchers_set.add(pitcher)
-            except:
-                print("error saving pitcher")
-
-
-def parse_box_scores():
-    files = [f for f in listdir(raw_xml_folder) if isfile(join(raw_xml_folder, f))]
-    boxscores = [f for f in files if re.match(".*boxscore.xml", f) and f not in file_set]
-    boxscores = sorted(boxscores)
-    for boxscore in boxscores:
-        try:
-            xml_data = open('%s/%s' % (raw_xml_folder, boxscore)).read()
-            root = ET.fromstring(xml_data)
-            save_team_names(root)
-            save_batters(root)
-            save_pitchers(root)
-            indexed = ParsedFile(boxscore)
-            session.add(indexed)
-            session.commit()
-        except:
-            print("error with boxscore %s" % boxscore)
-            traceback.print_exc()
-            continue
-    session.add_all(list(batters_set))
-    session.add_all(list(pitchers_set))
-    session.commit()
-
-
-def save_half_inning(inning):
-    at_bats = inning.findall('atbat')
-    events = list()
-    for at_bat in at_bats:
-        attrib = at_bat.attrib
-        event = Event()
-        event.pitcher = int(attrib['pitcher'])
-        event.batter = int(attrib['batter'])
-        event.description = attrib['des']
-        event.event = attrib['event']
-        events.append(event)
-    return events
-
-
-def save_events(root):
-    innings = root.findall('inning')
-    events = list()
-    for inning in innings:
-        events.extend(save_half_inning(inning.find('top')))
-        events.extend(save_half_inning(inning.find('bottom')))
-    session.add_all(events)
-    session.commit()
-
-
-def parse_game_events():
-    files = [f for f in listdir(raw_xml_folder) if isfile(join(raw_xml_folder, f))]
-    events = [f for f in files if re.match(".*events.xml", f) and f not in file_set]
-    events = sorted(events)
-    for event in events:
-        try:
-            xml_data = open('%s/%s' % (raw_xml_folder, event)).read()
-            root = ET.fromstring(xml_data)
-            save_events(root)
-            indexed = ParsedFile(event)
-            session.add(indexed)
-            session.commit()
-        except:
-            print("error with event %s" % event)
-            traceback.print_exc()
-            continue
+def parse_events(game, collection):
+    try:
+        event_parser = EventsParser(game.id)
+        event_collection = event_parser.parse(get_event_data(game))
+        collection.join(event_collection)
+    except ParseError:
+        print "Unable to parse boxscore for %s" % (game.to_json())
 
 
 if __name__ == '__main__':
-    global file_set
-    parsed = session.query(ParsedFile).all()
-    file_set = set([x.filename for x in parsed])
-    parse_box_scores()
-    parse_game_events()
+    global game_set
+    game_set = set(session.query(Game).all())
+    now = datetime.datetime.now()
+    day = datetime.timedelta(days=1)
+    collection = DbCollection()
+    while start_date < now:
+        game = Game(start_date.year, start_date.month, start_date.day, 1)
+        game.year = start_date.year
+        game.month = start_date.month
+        game.day = start_date.day
+        while has_game(game):
+            if game in game_set:
+                game = Game(start_date.year, start_date.month, start_date.day, game.game_num + 1)
+                continue
+            session.add(game)
+            session.commit()
+            parse_boxscore(game, collection)
+            parse_events(game, collection)
+            game = Game(start_date.year, start_date.month, start_date.day, game.game_num + 1)
+
+        start_date += day
+    collection.commit()

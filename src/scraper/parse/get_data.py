@@ -7,13 +7,13 @@ from sqlalchemy import desc
 from model import session
 from model.game import Game
 import requests
+import settings
 
 
 __author__ = 'leswing'
 
 
 base_url = "http://gd2.mlb.com/components/game/mlb"
-rawxml_folder = 'scraper/rawxml'
 
 
 def create_url(year, month, day):
@@ -34,7 +34,7 @@ def save_to_file(url, extension, year, month, day, game_num):
     try:
         full_url = "%s/%s" % (url, extension)
         r = requests.get(full_url)
-        filename = "%s/%04d.%02d.%02d.game_%d.%s" % (rawxml_folder, year, month, day, game_num, extension)
+        filename = "%s/%04d.%02d.%02d.game_%d.%s" % (settings.rawxml_folder, year, month, day, game_num, extension)
         f = open(filename, 'w')
         f.write(r.text.encode('utf-8'))
         f.close()

@@ -12,7 +12,6 @@ __author__ = 'leswing'
 
 BOX_SCORE = "box_score"
 EVENTS = "events"
-settings.raw_xml_folder = 'scraper/rawxml'
 
 global game_set
 start_date = datetime.datetime(year=2008, month=1, day=1)
@@ -70,6 +69,7 @@ if __name__ == '__main__':
     now = datetime.datetime.now()
     day = datetime.timedelta(days=1)
     collection = DbCollection()
+    db_batch = 0
     while start_date < now:
         game = Game(start_date.year, start_date.month, start_date.day, 1)
         game.year = start_date.year
@@ -81,9 +81,13 @@ if __name__ == '__main__':
                 continue
             session.add(game)
             session.commit()
+            db_batch += 1
             parse_boxscore(game, collection)
             parse_events(game, collection)
             game = Game(start_date.year, start_date.month, start_date.day, game.game_num + 1)
+            if db_batch % 1000 == 0:
+                collection.commit()
+                collection = DbCollection()
 
         start_date += day
     collection.commit()

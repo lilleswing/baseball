@@ -13,7 +13,6 @@ session = Session()
 
 
 def init():
-    print "lol"
     from model.event import Event
     from model.batter import Batter
     from model.pitcher import Pitcher

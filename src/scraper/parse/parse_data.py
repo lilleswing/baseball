@@ -6,19 +6,20 @@ from model.dbcollection import DbCollection
 from model.game import Game
 from scraper.parse.boxscore_parser import BoxscoreParser
 from scraper.parse.events_parser import EventsParser
+import settings
 
 __author__ = 'leswing'
 
 BOX_SCORE = "box_score"
 EVENTS = "events"
-RAW_XML_FOLDER = 'scraper/rawxml'
+settings.raw_xml_folder = 'scraper/rawxml'
 
 global game_set
 start_date = datetime.datetime(year=2008, month=1, day=1)
 
 
 def get_files(game):
-    base = "%s/%4d.%02d.%02d.game_%d" % (RAW_XML_FOLDER, game.year, game.month, game.day, game.game_num)
+    base = "%s/%4d.%02d.%02d.game_%d" % (settings.raw_xml_folder, game.year, game.month, game.day, game.game_num)
     boxscore = "%s%s" % (base, ".boxscore.xml")
     events = "%s%s" % (base, ".game_events.xml")
     return {

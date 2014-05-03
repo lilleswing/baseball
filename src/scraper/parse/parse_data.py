@@ -60,7 +60,7 @@ def parse_events(game, collection):
         event_collection = event_parser.parse(get_event_data(game))
         collection.join(event_collection)
     except ParseError:
-        print "Unable to parse boxscore for %s" % (game.to_json())
+        print "Unable to parse events for %s" % (game.to_json())
 
 
 if __name__ == '__main__':

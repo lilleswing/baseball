@@ -1,4 +1,4 @@
-__author__ = 'karl'
+__author__ = 'leswing'
 
 
 class BatterPitcherMatrix:

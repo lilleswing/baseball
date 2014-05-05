@@ -51,8 +51,8 @@ def get_links(url, year, month, day, text):
 
 
 def download_dates(start):
-    now = datetime.now()
     day = timedelta(days=1)
+    now = datetime.now() - day  # MLB.com puts empty files up before the games are actually played day of
     while start < now:
         download_xml(start.year, start.month, start.day)
         start += day

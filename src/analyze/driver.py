@@ -5,7 +5,7 @@ __author__ = 'karl'
 
 def create_naive_matrix():
     naive = Naive()
-    matrix = naive.create_matrix()
+    matrix = naive.create_batter_matrix()
     for i in xrange(0, len(matrix)):
         row = matrix[i]
         for j in xrange(0, len(row)):

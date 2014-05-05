@@ -1,6 +1,6 @@
 __author__ = 'karl'
 
-score_key = {
+batter_score_key = {
     "Strikeout": 0,
     "Groundout": 0,
     "Pop Out": 0,
@@ -30,9 +30,9 @@ score_key = {
 
 
 class Scorer:
-    def score(self, event_string):
-        if event_string not in score_key:
+    def score_batter(self, event_string):
+        if event_string not in batter_score_key:
             return 0
-        return score_key[event_string]
+        return batter_score_key[event_string]
 
 

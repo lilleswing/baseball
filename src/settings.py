@@ -18,5 +18,5 @@ __author__ = 'karl'
 
 #Work Big
 database_url = 'postgresql://postgres:NaClH2O@localhost:3247/baseball'
-database_echo = True
+database_echo = False
 data_dir = "/home/leswing/Documents/test-data/baseball"

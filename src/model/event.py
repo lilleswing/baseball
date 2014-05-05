@@ -26,3 +26,25 @@ class Event(Base):
             "game_id": self.game_id
         }
         return json.dumps(d)
+
+    def __str__(self):
+        d = {
+            "id": self.id,
+            "batter": self.batter,
+            "pitcher": self.pitcher,
+            "event": self.event,
+            "description": self.description,
+            "game_id": self.game_id
+        }
+        return json.dumps(d)
+
+    def __repr__(self):
+        d = {
+            "id": self.id,
+            "batter": self.batter,
+            "pitcher": self.pitcher,
+            "event": self.event,
+            "description": self.description,
+            "game_id": self.game_id
+        }
+        return json.dumps(d)

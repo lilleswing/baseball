@@ -7,16 +7,13 @@ __author__ = 'karl'
 #raw_xml_folder = "/home/leswing/Downloads/rawxml"
 
 #Dev
-#database_url = 'sqlite:////Users/karl/Documents/CompSci/baseball/src/foo.db'
-#database_echo = True
-#raw_xml_folder = "scraper/rawxml"
+database_url = 'sqlite:////Users/karl/Documents/CompSci/baseball/src/foo.db'
+database_echo = True
+data_dir = "scraper"
 
 #Work
-database_url = 'sqlite://///home/leswing/Documents/projects/baseball/foo.db'
-database_echo = False
-raw_xml_folder = "/home/leswing/Documents/test-data/baseball/june_2013"
+#database_url = 'sqlite://///home/leswing/Documents/projects/baseball/foo.db'
+#database_echo = False
+#raw_xml_folder = "/home/leswing/Documents/test-data/baseball/june_2013"
 
-try:
-    os.makedirs(raw_xml_folder)
-except OSError:
-    print("raw_xml_folder already exists")
+

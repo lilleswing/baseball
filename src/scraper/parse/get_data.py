@@ -1,13 +1,11 @@
-from datetime import timedelta, datetime
+import constants
 import re
+import requests
 import traceback
-
-from sqlalchemy import desc
-
+from datetime import timedelta, datetime
 from model import session
 from model.game import Game
-import requests
-import settings
+from sqlalchemy import desc
 
 
 __author__ = 'leswing'
@@ -34,7 +32,7 @@ def save_to_file(url, extension, year, month, day, game_num):
     try:
         full_url = "%s/%s" % (url, extension)
         r = requests.get(full_url)
-        filename = "%s/%04d.%02d.%02d.game_%d.%s" % (settings.rawxml_folder, year, month, day, game_num, extension)
+        filename = "%s/%04d.%02d.%02d.game_%d.%s" % (constants.rawxml_folder, year, month, day, game_num, extension)
         f = open(filename, 'w')
         f.write(r.text.encode('utf-8'))
         f.close()

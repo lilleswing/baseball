@@ -1,4 +1,4 @@
-from xml.etree.ElementTree import ParseError
+import constants
 import datetime
 import os
 from model import session
@@ -6,7 +6,7 @@ from model.dbcollection import DbCollection
 from model.game import Game
 from scraper.parse.boxscore_parser import BoxscoreParser
 from scraper.parse.events_parser import EventsParser
-import settings
+from xml.etree.ElementTree import ParseError
 
 __author__ = 'leswing'
 
@@ -18,7 +18,7 @@ start_date = datetime.datetime(year=2008, month=1, day=1)
 
 
 def get_files(game):
-    base = "%s/%4d.%02d.%02d.game_%d" % (settings.raw_xml_folder, game.year, game.month, game.day, game.game_num)
+    base = "%s/%4d.%02d.%02d.game_%d" % (constants.raw_xml_folder, game.year, game.month, game.day, game.game_num)
     boxscore = "%s%s" % (base, ".boxscore.xml")
     events = "%s%s" % (base, ".game_events.xml")
     return {

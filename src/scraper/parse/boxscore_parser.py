@@ -15,7 +15,7 @@ class BoxscoreParser():
         self.game_num = game_num
         self.collection = DbCollection()
 
-    def get_team(self,team_type, attrib):
+    def get_team(self, team_type, attrib):
         try:
             team = Team()
             team.code = attrib['%s_team_code' % team_type]
@@ -25,7 +25,7 @@ class BoxscoreParser():
         except:
             return None
 
-    def save_team_names(self,root):
+    def save_team_names(self, root):
         home_team = self.get_team(HOME_TEAM, root.attrib)
         if home_team is not None:
             self.collection.add_team(home_team)

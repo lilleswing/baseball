@@ -42,3 +42,9 @@ class Game(Base):
             "game_num": self.game_num
         }
         return json.dumps(d)
+
+    def __repr__(self):
+        return self.to_json()
+
+    def __str__(self):
+        return self.to_json()

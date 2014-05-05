@@ -32,7 +32,7 @@ def save_to_file(url, extension, year, month, day, game_num):
     try:
         full_url = "%s/%s" % (url, extension)
         r = requests.get(full_url)
-        filename = "%s/%04d.%02d.%02d.game_%d.%s" % (constants.rawxml_folder, year, month, day, game_num, extension)
+        filename = "%s/%04d.%02d.%02d.game_%d.%s" % (constants.raw_xml_folder, year, month, day, game_num, extension)
         f = open(filename, 'w')
         f.write(r.text.encode('utf-8'))
         f.close()
@@ -51,7 +51,7 @@ def get_links(url, year, month, day, text):
 
 
 def download_dates(start):
-    now = datetime.datetime.now()
+    now = datetime.now()
     day = timedelta(days=1)
     while start < now:
         download_xml(start.year, start.month, start.day)
@@ -59,13 +59,13 @@ def download_dates(start):
 
 
 def full_download():
-    first = datetime.datetime(year=2008, month=1, day=1)
+    first = datetime(year=2008, month=1, day=1)
     download_dates(first)
 
 
 def incremental_download():
     last = session.query(Game).order_by(desc(Game.timestamp)).first()
-    download_dates(last)
+    download_dates(last.timestamp)
 
 if __name__ == '__main__':
     incremental_download()

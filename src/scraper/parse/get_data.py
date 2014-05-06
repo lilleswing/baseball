@@ -11,11 +11,8 @@ from sqlalchemy import desc
 __author__ = 'leswing'
 
 
-base_url = "http://gd2.mlb.com/components/game/mlb"
-
-
 def create_url(year, month, day):
-    return "%s/year_%04d/month_%02d/day_%02d" % (base_url, year, month, day)
+    return "%s/year_%04d/month_%02d/day_%02d" % (constants.base_scrape_url, year, month, day)
 
 
 def download_xml(year, month, day):

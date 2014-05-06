@@ -73,4 +73,3 @@ class Naive:
         fin = open(filename, 'rb')
         pickle.load(fin)
         fin.close()
-

@@ -1,5 +1,7 @@
 from analyze.draftkings.scorer import Scorer
-from model import session, BatterPitcherMatrix
+import constants
+from model import session
+from model.batterpitchermatrix import BatterPitcherMatrix
 from model.batter import Batter
 from model.event import Event
 from model.pitcher import Pitcher
@@ -7,11 +9,10 @@ import numpy
 
 __author__ = 'karl'
 
-scorer = Scorer()
-
 
 class Naive:
-    def create_matrix(self):
+    def create_matrix(self, scorer=Scorer()):
+        self.scorer = scorer
         batters = session.query(Batter).all()
         pitchers = session.query(Pitcher).all()
         matrix_data = numpy.zeros((len(batters), len(pitchers)))
@@ -23,7 +24,7 @@ class Naive:
                 pitcher = pitchers[j]
                 sub_score = self.score(batter_events, pitcher.mlb_id)
                 matrix_data[i][j] = sub_score
-        return BatterPitcherMatrix(matrix_data, batters, pitchers)
+        return BatterPitcherMatrix(matrix_data, batters, pitchers, constants.BATTER)
 
     def score(self, batter_events, pitcher_id):
         """
@@ -36,6 +37,6 @@ class Naive:
             return 0
         total = 0
         for event in events:
-            total += scorer.score(event.event)
+            total += self.scorer.score_batter(event.event)
         return float(total) / float(len(events))
 

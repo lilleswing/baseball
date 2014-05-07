@@ -1,18 +1,16 @@
 from analyze.algorithm.naive import Naive
+from analyze.matrixfilter.average import AverageFilter
+from model.batterpitchermatrix import BatterPitcherMatrix
 
 __author__ = 'karl'
 
 
 def create_naive_matrix():
     naive = Naive()
-    matrix = naive.get_batter_matrix()
-    for i in xrange(0, len(matrix.matrix)):
-        row = matrix.matrix[i]
-        for j in xrange(0, len(row)):
-            value = matrix.matrix[i][j]
-            if value != 0:
-                print ("%d,%d:%f" % (i, j, value))
-
+    matrix_filter = AverageFilter()
+    bp_matrix = naive.get_batter_matrix()
+    bp_matrix.orientation = BatterPitcherMatrix.BATTER_ORIENTATION
+    matrix_filter.matrix_filter(bp_matrix)
 
 if __name__ == "__main__":
     create_naive_matrix()

@@ -18,6 +18,8 @@ def init():
     from model.pitcher import Pitcher
     from model.team import Team
     from model.game import Game
+    from model.calculator import Calculator
+    from model.gameresult import GameResult
     Base.metadata.drop_all(engine)
     Base.metadata.create_all(engine)
 

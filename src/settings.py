@@ -7,9 +7,9 @@ __author__ = 'karl'
 #raw_xml_folder = "/home/leswing/Downloads/rawxml" # TO FIX
 
 #Dev
-#database_url = 'sqlite:////Users/karl/Documents/CompSci/baseball/src/foo.db'
-#database_echo = True
-#data_dir = "scraper"
+database_url = 'sqlite:////Users/karl/Documents/CompSci/baseball/src/foo.db'
+database_echo = True
+data_dir = "scraper"
 
 #Work
 #database_url = 'sqlite://///home/leswing/Documents/projects/baseball/foo.db'
@@ -17,6 +17,6 @@ __author__ = 'karl'
 #raw_xml_folder = "/home/leswing/Documents/test-data/baseball/june_2013" # TO FIX
 
 #Work Big
-database_url = 'postgresql://postgres:NaClH2O@localhost:3247/baseball'
-database_echo = False
-data_dir = "/home/leswing/Documents/test-data/baseball"
+#database_url = 'postgresql://postgres:NaClH2O@localhost:3247/baseball'
+#database_echo = False
+#data_dir = "/home/leswing/Documents/test-data/baseball"

@@ -43,7 +43,7 @@ class TruthEvaluator:
             game_results.player_type = constants.BATTER
             game_results.actions = len(event_list)
             game_results.score = total
-            game_results.game = event_list[0].game_id #gaurenteed to have one element
+            game_results.game = event_list[0].game_id  # guaranteed to have one element
             batter_results.append(game_results)
         return batter_results
 
@@ -57,6 +57,7 @@ class TruthEvaluator:
         session.add(calculator)
         session.commit()
         return calculator
+
 
 if __name__ == "__main__":
     t = TruthEvaluator()

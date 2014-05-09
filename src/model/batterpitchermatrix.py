@@ -17,20 +17,26 @@ class BatterPitcherMatrix:
         self.matrix = matrix
         self.batters = batters
         self.pitchers = pitchers
+        self._create_lookup_tables()
 
     def get_cell(self, batter_mlbid, pitcher_mlbid):
         """
         Gets a cell in the matrix given the mlbid of the batter
         and pitcher
-        TODO(LESWING) rewrite with a hash lookup for speed
-        TODO(LESWING) this is really really bad
         """
-        bat_index = 0
-        pit_index = 0
-        while self.batters[bat_index].mlb_id != batter_mlbid:
-            bat_index += 1
-        while self.pitchers[pit_index].mlb_id != pitcher_mlbid:
-            pit_index += 1
+        bat_index = self.batter_lookup[batter_mlbid]
+        pit_index = self.pitcher_lookup[pitcher_mlbid]
         if self.orientation == constants.BATTER:
             return self.matrix[bat_index][pit_index]
         return self.matrix[pit_index][bat_index]
+
+    def _create_lookup_tables(self):
+        self.batter_lookup = self._create_lookup_table(self.batters)
+        self.pitcher_lookup = self._create_lookup_table(self.pitchers)
+
+    def _create_lookup_table(self, players):
+        lookup = dict()
+        for i in xrange(len(players)):
+            player = players[i]
+            lookup[player.mlb_id] = i
+        return lookup

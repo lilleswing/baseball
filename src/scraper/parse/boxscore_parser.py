@@ -23,7 +23,7 @@ class BoxscoreParser():
             team.mlb_id = int(attrib['%s_id' % team_type])
             return team
         except:
-            return None
+            return
 
     def save_team_names(self, root):
         home_team = self.get_team(HOME_TEAM, root.attrib)

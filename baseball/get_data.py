@@ -4,7 +4,7 @@ import requests
 import traceback
 from datetime import timedelta, datetime
 from model import session
-from model.game import Game
+from model import Game
 from sqlalchemy import desc
 
 
@@ -19,7 +19,7 @@ def download_xml(year, month, day):
     url = create_url(year, month, day)
     r = requests.get(url)
     links = get_links(url, year, month, day, r.text)
-    for i in xrange(0, len(links)):
+    for i in range(0, len(links)):
         link = links[i]
         save_to_file(link, "boxscore.xml", year, month, day, i)
         save_to_file(link, "game_events.xml", year, month, day, i)
@@ -31,7 +31,7 @@ def save_to_file(url, extension, year, month, day, game_num):
         r = requests.get(full_url)
         filename = "%s/%04d.%02d.%02d.game_%d.%s" % (constants.raw_xml_folder, year, month, day, game_num, extension)
         f = open(filename, 'w')
-        f.write(r.text.encode('utf-8'))
+        f.write(r.text)
         f.close()
     except:
         traceback.print_exc()
@@ -62,7 +62,10 @@ def full_download():
 
 def incremental_download():
     last = session.query(Game).order_by(desc(Game.timestamp)).first()
-    download_dates(last.timestamp)
+    if last is None:
+        full_download()
+    else:
+      download_dates(last.timestamp)
 
 if __name__ == '__main__':
     incremental_download()

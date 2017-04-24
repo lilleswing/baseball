@@ -3,6 +3,8 @@
 *.iws
 *.pyc
 
+.eggs
+*.egg-info
 log/
 target/
 scraper/rawxml_bk

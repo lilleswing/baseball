@@ -1,6 +1,6 @@
 #!/bin/bash
 virtualenv baseball_venv
-source baseball_ven/bin/activate
+source baseball_venv/bin/activate
 pip install -r requirements.txt
 python setup.py develop
 

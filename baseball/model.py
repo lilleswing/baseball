@@ -1,6 +1,7 @@
 import datetime
 import json
 
+import os
 from sqlalchemy import Column, Integer, String
 from sqlalchemy import Float
 from sqlalchemy import TIMESTAMP
@@ -271,6 +272,9 @@ class GameResult(Base):
 
 
 def init():
+  if os.path.exists(settings.database_filename):
+    print("Not making database as already exists")
+    return
   Base.metadata.drop_all(engine)
   Base.metadata.create_all(engine)
   print("Created Tables")

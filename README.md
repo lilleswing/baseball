@@ -7,7 +7,6 @@ The data is updated nightly
 ``` bash
 bash devtools/restore_db.sh
 sqlite3 baseball.db
-.tables
 sqlite> .tables
 >>  batter       event        game_result  team
 >>  calculator   game         pitcher

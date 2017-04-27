@@ -8,6 +8,9 @@ cd baseball
 python model.py
 python get_data.py
 python parse_data.py
-sqlite3 baseball.db .dump > ../baseball.bak
 
-rm -rf baseball_venv
+sqlite3 baseball.db .dump > ../baseball.bak
+git add ../baseball.bak
+git commit -m "Updating Baseball Database"
+
+rm -rf ../baseball_venv

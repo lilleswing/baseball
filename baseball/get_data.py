@@ -27,10 +27,12 @@ def download_xml(year, month, day):
 
 def save_to_file(url, extension, year, month, day, game_num):
   try:
+    full_url = "%s/%s" % (url, extension)
+    print(full_url)
     filename = "%s/%04d.%02d.%02d.game_%d.%s" % (constants.raw_xml_folder, year, month, day, game_num, extension)
     if os.path.exists(filename):
       return
-    full_url = "%s/%s" % (url, extension)
+
     r = requests.get(full_url)
     with open(filename, encoding='utf-8', mode='w+') as f:
       f.write(r.text)
@@ -43,6 +45,7 @@ def get_links(url, year, month, day, text):
   pattern = 'gid_%04d_%02d_%02d.*?"' % (year, month, day)
   rel_links = re.findall(pattern, text)
   rel_links = [x[0:-2] for x in rel_links]
+  rel_links = list(filter(lambda x: x.find('<li>') == -1, rel_links))
   links = ["%s/%s" % (url, x) for x in rel_links]
   links = sorted(links)
   return links

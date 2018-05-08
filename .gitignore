@@ -9,4 +9,5 @@ baseball.db
 *.egg-info
 log/
 target/
+scraper
 scraper/rawxml_bk
